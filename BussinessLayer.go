@@ -7,7 +7,7 @@ func InitializeChaincode(stub shim.ChaincodeStubInterface, args []string) error 
 }
 
 func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	return CreateDatabase(stub, args)
+	
 }
 
 func GetContract(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
