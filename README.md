@@ -1,8 +1,7 @@
-<<<<<<< HEAD
+HEAD
 # DigitalTradeChain
 
-Nilesh : My check In 
-=======
+Nilesh : My check In
 # DigitalTradeChain
 Hi
 Bye
