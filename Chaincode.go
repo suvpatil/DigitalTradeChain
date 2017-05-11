@@ -31,20 +31,20 @@ func (t *DTC_Chaincode) Invoke(stub shim.ChaincodeStubInterface, function string
 	if function == "SaveContract" {
 		// Insert Contract data in blockchain
 		return SaveDetails(stub, args)
-	} else if function == "UpdateContractStatus" {
+	}/* else if function == "UpdateContractStatus" {
 		// Update Contract status data in blockchain
 		return UpdateContractStatus(stub, args)
-	}
+	}*/
 
 	return nil, nil
 }
 
 func (t *DTC_Chaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
-	if function == "GetContract" {
+	/*if function == "GetContract" {
 		// Read contract details from blockchain
 		return GetContract(stub, args)
-	}
+	}*/
 	return nil, nil
 }
 

@@ -34,7 +34,7 @@ func insertContractDetails(stub shim.ChaincodeStubInterface, contractsID string,
 	return ok, err
 }
 
-func getContractDetails(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
+/*func getContractDetails(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
 	var ContractDetails Contract
 	var columns []shim.Column
 
@@ -85,3 +85,4 @@ func updateContractDetails(stub shim.ChaincodeStubInterface, contractDetails con
 	}
 	return true, nil
 }
+*/

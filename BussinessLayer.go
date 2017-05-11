@@ -6,9 +6,10 @@ import (
  "encoding/json"
  "math/rand"
  "strconv"
+ "time"
 )	
 
-func InitializeChaincode(stub shim.ChaincodeStubInterface, args []string) error {
+func initializeChaincode(stub shim.ChaincodeStubInterface, args []string) error {
 	return createDatabase(stub, args)
 }
 
@@ -24,6 +25,16 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	contractsId := strconv.Itoa(rand.Int())
 	json.Unmarshal([]byte(args[0]), &contractDetails)
 
+	current_time := time.Now().Local()
+	contractDetails.contractCreateDate = current_time.Format("2006-01-02")
+	contractDetails.isLCAttached = false
+	contractDetails.isPOAttached = true
+	contractDetails.isBillOfLedingAttached = false
+	contractDetails.isInvoiceListAttached = false
+	contractDetails.actionPendingOn = "Buyer"
+	contractDetails.contractStatus = "Contract Created"
+	
+
 	ok, err = insertContractDetails(stub, contractsId, contractDetails)
 	if !ok && err == nil {
 		return nil, errors.New("Error in adding OrderDetails record")
@@ -32,10 +43,10 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	return nil, err
 }
 
-func GetContract(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+/*func GetContract(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 }
 
 func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
-}
+}*/
