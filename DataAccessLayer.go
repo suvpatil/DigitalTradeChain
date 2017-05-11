@@ -18,12 +18,7 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	if err != nil {
 		return errors.New("Failed creating ContractDetails table")
 	}
-	return nil
 
-	})
-	if err != nil {
-		return errors.New("Failed creating contractDetails table.")
-	}
 
 	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
@@ -41,6 +36,10 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	if err != nil {
 		return errors.New("Failed creating userDetails table.")
 	}
+
+
+
+	return nil
 
 }
 
