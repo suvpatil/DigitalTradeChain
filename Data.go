@@ -2,21 +2,20 @@ package main
 
 type contract struct {
 	contractId                   string `json:"contractId"`
-	orderDetails                 order  `json:"orderDetails"`
-	contractCreateDate           string `json:"createDate"`
-	sellerInformation            user   `json:"sellerInformation"`
-	buyerInformation             user   `json:"buyerInformation"`
-	buyerBankInformation         user   `json:"buyerBankInformation"`
-	sellerBankInformation        user   `json:"sellerBankInformation"`
-	transporterInformation       user   `json:"transporterInformation"`
-	paymentConditionInDays       int    `json:"paymentConditionInDays"`
+	sellerDetails          		 sellerDetails   `json:"sellerDetails"`
+	buyerDetails          		 buyerDetails   `json:"buyerDetails"`
+	tradeDetails				 tradeDetails   `json:"tradeDetails"`
+	tradeConditions				 tradeConditions `json:"tradeConditions"`
+	deliveryDetails				 deliveryDetails `json:"deliveryDetails"`	
+	contractCreateDate           string `json:"createDate"`	
+	//paymentConditionInDays       int    `json:"paymentConditionInDays"`
 	isLCAttached                 bool   `json:"isLCAttached"`
 	isPOAttached                 bool   `json:"isPOAttached"`
 	isInvoiceListAttached        bool   `json:"isInvoiceListAttached"`
 	isBillOfLedingAttached       bool   `json:"isBillOfLedingAttached"`
 	actionPendingOn              string `json:"actionPendingOn"`
 	contractStatus               string `json:"contractStatus"`
-	createDate                   string `json:"createDate"`
+	lastUpdatedDate              string `json:"createDate"`
 	buyerApprove                 string `json:"buyerApprove"`
 	locPublishedByBuyerBank      string `json:"locPublishedByBuyerBank"`
 	locPublishedBySellerBank     string `json:"locPublishedBySellerBank"`
@@ -29,17 +28,45 @@ type contract struct {
 	paymentConfirmedBySeller     string `json:"paymentConfirmedBySeller"`
 }
 
-type order struct {
-	totalAmount     int       `json:"totalAmount"`
-	currency        string    `json:"currency"`
-	deliveryDate    string    `json:"deliveryDate"`
-	deliveryAddress string    `json:"deliveryAddress"`
-	articleDetails  []article `json:"articleDetails"`
+
+type tradeConditions struct {
+	paymentDuration		string `"json:"paymentDuration"` 	
+	transportDuration	string `"json:"transportDuration"`
+	currency			string `"json:"currency"`
+	paymentTerms		string `"json:"paymentTerms"`
+}
+
+type tradeDetails struct {
+	productList []product `json:"productList"`
+	poAttachment string `"json:"poAttachment"`
+}
+
+type product struct {
+	productName string `json:"productName"`
+	productDesc string `json:"productDesc"`
+	productPrice string `json:"productPrice"`
+	productQuantity string `json:"productQuantity"`
+	totalAmount string `json:"totalAmount"`
+}
+type sellerDetails struct {
+	seller user `json:"seller"`
+	sellerBank user `json:"sellerBank"`
+}
+type buyerDetails struct {
+	buyer user `json:"buyer"`
+	buyerBank user `json:"buyerBank"`
+}
+
+type deliveryDetails struct {
+	address string `json:"address"`
+	deliveryDate string `json:"deliveryDate"`
+	transporterDetails user `json:"transporterDetails"`
 }
 
 type user struct {
 	userId         string `json:"userId"`
-	contactDetails string `json:"contactDetails"`
+	userName 	   string `json:"userName"`	
+	contactNo      string `json:"contactNo"`
 	address        string `json:"address"`
 }
 
