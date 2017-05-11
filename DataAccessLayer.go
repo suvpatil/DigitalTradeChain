@@ -2,50 +2,33 @@ package main
 
 import (
 	"errors"
-
+	"encoding/json"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
-	var err error
+	var err error	
 	//Create table "ContractDetails"
-	err = stub.CreateTable("ContractDetails", []*shim.ColumnDefinition{
-		&shim.ColumnDefinition{Name: "ContractId", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "OrderId", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentCommitment", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentConfirmation", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "InformationCounterparty", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "ForfeitingInvoice", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "ContractCreateDate", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentDueDate", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "InvoiceStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "ContractStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "DeliveryStatus", Type: shim.ColumnDefinition_STRING, Key: false},
+	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "contractDetails", Type: shim.ColumnDefinition_BYTES, Key: false},
+		
 	})
 	if err != nil {
-		return errors.New("Failed creating ContractDetails table.")
+		return errors.New("Failed creating ContractDetails table")
 	}
-
+	return nil
 }
 
-func insertContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
+func insertContractDetails(stub shim.ChaincodeStubInterface, contractsID string, contractDetails contract) (bool, error) {
 	var err error
 	var ok bool
-	ok, err = stub.InsertRow("ContractDetails", shim.Row{
+	jsonAsBytes, _ := json.Marshal(contractDetails)
+	ok, err = stub.InsertRow("contractDetails", shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.ContractId}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.OrderId}},
-			&shim.Column{Value: &shim.Column_Bool{Bool: ContractDetails.PaymentCommitment}},
-			&shim.Column{Value: &shim.Column_Bool{Bool: ContractDetails.PaymentConfirmation}},
-			&shim.Column{Value: &shim.Column_Bool{Bool: ContractDetails.InformationCounterparty}},
-			&shim.Column{Value: &shim.Column_Bool{Bool: ContractDetails.ForfeitingInvoice}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.ContractCreateDate}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.PaymentDueDate}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.InvoiceStatus}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.PaymentStatus}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.ContractStatus}},
-			&shim.Column{Value: &shim.Column_String_{String_: ContractDetails.DeliveryStatus}},
+			&shim.Column{Value: &shim.Column_String_{String_: contractDetails.contractId}},
+			&shim.Column{Value: &shim.Column_Bytes{Bytes: jsonAsBytes}},
+			
 		},
 	})
 	return ok, err

@@ -4,11 +4,11 @@ type contract struct {
 	contractId                   string `json:"contractId"`
 	orderDetails                 order  `json:"orderDetails"`
 	contractCreateDate           string `json:"createDate"`
-	sellerInformation            user   `json:"sellerInformation"`
-	buyerInformation             user   `json:"buyerInformation"`
-	buyerBankInformation         user   `json:"buyerBankInformation"`
-	sellerBankInformation        user   `json:"sellerBankInformation"`
-	transporterInformation       user   `json:"transporterInformation"`
+	sellerDetails          		 int   `json:"sellerDetails"`
+	buyerDetails           		 int   `json:"buyerDetails"`
+	buyerBankDetails       		 int   `json:"buyerBankDetails"`
+	sellerBankDetails      		 int   `json:"sellerBankDetails"`
+	transporterDetails     		 int   `json:"transporterDetails"`
 	paymentConditionInDays       int    `json:"paymentConditionInDays"`
 	isLCAttached                 bool   `json:"isLCAttached"`
 	isPOAttached                 bool   `json:"isPOAttached"`
@@ -39,8 +39,9 @@ type order struct {
 
 type user struct {
 	userId         string `json:"userId"`
-	contactDetails string `json:"contactDetails"`
+	userName 	   string `json:"userName"`
 	address        string `json:"address"`
+	contactNo      string `json:"contactNo"`
 }
 
 type article struct {
