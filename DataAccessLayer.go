@@ -12,12 +12,36 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "contractDetails", Type: shim.ColumnDefinition_BYTES, Key: false},
+<<<<<<< HEAD
 		
 	})
 	if err != nil {
 		return errors.New("Failed creating ContractDetails table")
 	}
 	return nil
+=======
+	})
+	if err != nil {
+		return errors.New("Failed creating contractDetails table.")
+	}
+
+	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "attachmentName", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "documentBlob", Type: shim.ColumnDefinition_BYTES, Key: false},
+	})
+	if err != nil {
+		return errors.New("Failed creating attachmentDetails table.")
+	}
+
+	err = stub.CreateTable("userDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
+	})
+	if err != nil {
+		return errors.New("Failed creating userDetails table.")
+	}
+>>>>>>> 072642311ef95c118fa9b997cc0506ae18ba50c9
 }
 
 func insertContractDetails(stub shim.ChaincodeStubInterface, contractsID string, contractDetails contract) (bool, error) {
