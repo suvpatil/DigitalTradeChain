@@ -9,24 +9,30 @@ import (
 func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	var err error
 	//Create table "ContractDetails"
-	err = stub.CreateTable("ContractDetails", []*shim.ColumnDefinition{
-		&shim.ColumnDefinition{Name: "ContractId", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "OrderId", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentCommitment", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentConfirmation", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "InformationCounterparty", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "ForfeitingInvoice", Type: shim.ColumnDefinition_BOOL, Key: false},
-		&shim.ColumnDefinition{Name: "ContractCreateDate", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentDueDate", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "InvoiceStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "PaymentStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "ContractStatus", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "DeliveryStatus", Type: shim.ColumnDefinition_STRING, Key: false},
+	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "contractDetails", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
-		return errors.New("Failed creating ContractDetails table.")
+		return errors.New("Failed creating contractDetails table.")
 	}
 
+	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "attachmentName", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "documentBlob", Type: shim.ColumnDefinition_BYTES, Key: false},
+	})
+	if err != nil {
+		return errors.New("Failed creating attachmentDetails table.")
+	}
+
+	err = stub.CreateTable("userDetails", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
+	})
+	if err != nil {
+		return errors.New("Failed creating userDetails table.")
+	}
 }
 
 func insertContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
