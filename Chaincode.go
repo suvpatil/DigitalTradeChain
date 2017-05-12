@@ -41,10 +41,10 @@ func (t *DTC_Chaincode) Invoke(stub shim.ChaincodeStubInterface, function string
 
 func (t *DTC_Chaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
-	/*if function == "GetContract" {
+	if function == "getContractDetails" {
 		// Read contract details from blockchain
-		return GetContract(stub, args)
-	}*/
+		return getContractDetails(stub, args)
+	}
 	return nil, nil
 }
 
