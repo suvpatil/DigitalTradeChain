@@ -68,7 +68,7 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 	}
 
 	json.Unmarshal(row.Columns[1].GetBytes(), &contractList)
-	return contractList, nil
+	return row.Columns[1], nil
 }
 /*
 func updateContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
