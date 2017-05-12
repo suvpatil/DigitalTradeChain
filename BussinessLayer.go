@@ -43,6 +43,16 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	return nil, err
 }
 
+func getContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	contractId := args[0]
+	contractList, _ := getContractSpecificList(stub, contractId)
+
+	jsonAsBytes, _ := json.Marshal(contractList)
+	return jsonAsBytes, nil
+
+}
+
 /*func GetContract(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 }
