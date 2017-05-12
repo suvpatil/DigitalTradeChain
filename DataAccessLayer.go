@@ -54,7 +54,7 @@ func insertContractDetails(stub shim.ChaincodeStubInterface, contId string, cont
 	return ok, err
 }
 
-func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
+func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string) ([]string, error) {
 	
 	var columns []shim.Column
 	var contractList []string
