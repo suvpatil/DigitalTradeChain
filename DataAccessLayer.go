@@ -67,7 +67,7 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 		return contractList, errors.New("Failed to query table contractDetails")
 	}
 
-	json.Unmarshal(row.Columns[1].GetString_(), &contractList)
+	json.Unmarshal(row.Columns[0].GetString_(), &contractList)
 	return contractList, nil
 	
 }
