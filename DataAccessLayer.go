@@ -43,13 +43,13 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 
 }
 
-func insertContractDetails(stub shim.ChaincodeStubInterface, contractsID string, contractDetails contract) (bool, error) {
+func insertContractDetails(stub shim.ChaincodeStubInterface, contractId string, contractDetails contract) (bool, error) {
 	var err error
 	var ok bool
 	jsonAsBytes, _ := json.Marshal(contractDetails)
 	ok, err = stub.InsertRow("contractDetails", shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: contractDetails.contractId}},
+			&shim.Column{Value: &shim.Column_String_{String_: contractId}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: jsonAsBytes}},
 			
 		},
