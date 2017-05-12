@@ -11,14 +11,13 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	//Create table "ContractDetails"
 	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "contractDetails", Type: shim.ColumnDefinition_BYTES, Key: false},
+		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
 
 		
 	})
 	if err != nil {
 		return errors.New("Failed creating ContractDetails table")
 	}
-
 
 	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
@@ -31,25 +30,23 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 
 	err = stub.CreateTable("userDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
+		&shim.ColumnDefinition{Name: "contractIdList", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
 		return errors.New("Failed creating userDetails table.")
 	}
 
-
-
 	return nil
 
 }
 
-func insertContractDetails(stub shim.ChaincodeStubInterface, contractId string, contractDetails contract) (bool, error) {
+func insertContractDetails(stub shim.ChaincodeStubInterface, contId string, contractDetails contract) (bool, error) {
 	var err error
 	var ok bool
 	jsonAsBytes, _ := json.Marshal(contractDetails)
 	ok, err = stub.InsertRow("contractDetails", shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: contractId}},
+			&shim.Column{Value: &shim.Column_String_{String_: contId}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: jsonAsBytes}},
 			
 		},
@@ -73,34 +70,7 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 	json.Unmarshal(row.Columns[1].GetBytes(), &contractList)
 	return contractList, nil
 }
-/*func getContractDetails(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
-	var ContractDetails Contract
-	var columns []shim.Column
-
-	col1 := shim.Column{Value: &shim.Column_String_{String_: ContractId}}
-	columns = append(columns, col1)
-
-	row, err := stub.GetRow("ContractDetails", columns)
-	if err != nil {
-		return ContractDetails, errors.New("Failed to query table ContractDetails")
-	}
-
-	ContractDetails.ContractId = row.Columns[0].GetString_()
-	ContractDetails.OrderId = row.Columns[1].GetString_()
-	ContractDetails.PaymentCommitment = row.Columns[2].GetBool()
-	ContractDetails.PaymentConfirmation = row.Columns[3].GetBool()
-	ContractDetails.InformationCounterparty = row.Columns[4].GetBool()
-	ContractDetails.ForfeitingInvoice = row.Columns[5].GetBool()
-	ContractDetails.ContractCreateDate = row.Columns[6].GetString_()
-	ContractDetails.PaymentDueDate = row.Columns[7].GetString_()
-	ContractDetails.InvoiceStatus = row.Columns[8].GetString_()
-	ContractDetails.PaymentStatus = row.Columns[9].GetString_()
-	ContractDetails.ContractStatus = row.Columns[10].GetString_()
-	ContractDetails.DeliveryStatus = row.Columns[11].GetString_()
-
-	return ContractDetails, nil
-}
-
+/*
 func updateContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
 	ok, err := stub.ReplaceRow("ContractDetails", shim.Row{
 		Columns: []*shim.Column{
