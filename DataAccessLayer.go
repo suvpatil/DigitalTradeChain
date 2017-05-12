@@ -57,6 +57,22 @@ func insertContractDetails(stub shim.ChaincodeStubInterface, contractsID string,
 	return ok, err
 }
 
+func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
+	
+	var columns []shim.Column
+	var contractList contract
+
+	col1 := shim.Column{Value: &shim.Column_String_{String_: contractId}}
+	columns = append(columns, col1)
+
+	row, err := stub.GetRow("contractDetails", columns)
+	if err != nil {
+		return contractList, errors.New("Failed to query table contractDetails")
+	}
+
+	json.Unmarshal(row.Columns[1].GetBytes(), &contractList)
+	return contractList, nil
+}
 /*func getContractDetails(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
 	var ContractDetails Contract
 	var columns []shim.Column
