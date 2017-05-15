@@ -1,13 +1,14 @@
 package main
 
 import (
- "github.com/hyperledger/fabric/core/chaincode/shim"
- "errors"
- "encoding/json"
- //"math/rand"
- //"strconv"
- "time"
-)	
+	"encoding/json"
+	"errors"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	//"math/rand"
+	//"strconv"
+	"time"
+)
 
 func initializeChaincode(stub shim.ChaincodeStubInterface, args []string) error {
 	return createDatabase(stub, args)
@@ -17,11 +18,11 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	var contractDetails contract
 	var err error
 	var ok bool
-	
+
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Need 1 arguments")
 	}
-	
+
 	contractsId := "1234" //strconv.Itoa(rand.Int())
 	json.Unmarshal([]byte(args[0]), &contractDetails)
 
@@ -33,7 +34,6 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	contractDetails.isInvoiceListAttached = false
 	contractDetails.actionPendingOn = "Buyer"
 	contractDetails.contractStatus = "Contract Created"
-
 
 	ok, err = insertContractDetails(stub, contractsId, contractDetails)
 	if !ok && err == nil {
@@ -56,4 +56,3 @@ func getContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte
 /*func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 }*/
-
