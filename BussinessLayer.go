@@ -27,13 +27,13 @@ func SaveDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error
 	json.Unmarshal([]byte(args[0]), &contractDetails)
 
 	current_time := time.Now().Local()
-	contractDetails.contractCreateDate = current_time.Format("2006-01-02")
-	contractDetails.isLCAttached = false
-	contractDetails.isPOAttached = true
-	contractDetails.isBillOfLedingAttached = false
-	contractDetails.isInvoiceListAttached = false
-	contractDetails.actionPendingOn = "Buyer"
-	contractDetails.contractStatus = "Contract Created"
+	contractDetails.ContractCreateDate = current_time.Format("2006-01-02")
+	contractDetails.IsLCAttached = false
+	contractDetails.IsPOAttached = true
+	contractDetails.IsBillOfLedingAttached = false
+	contractDetails.IsInvoiceListAttached = false
+	contractDetails.ActionPendingOn = "Buyer"
+	contractDetails.ContractStatus = "Contract Created"
 
 	ok, err = insertContractDetails(stub, contractsId, contractDetails)
 	if !ok && err == nil {
