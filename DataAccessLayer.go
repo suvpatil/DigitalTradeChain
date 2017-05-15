@@ -1,19 +1,18 @@
 package main
 
 import (
-	"errors"
 	"encoding/json"
+	"errors"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
-	var err error	
+	var err error
 	//Create table "ContractDetails"
 	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
-
-		
 	})
 	if err != nil {
 		return errors.New("Failed creating ContractDetails table")
@@ -48,14 +47,13 @@ func insertContractDetails(stub shim.ChaincodeStubInterface, contId string, cont
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_String_{String_: contId}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: jsonAsBytes}},
-			
 		},
 	})
 	return ok, err
 }
 
 func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string) ([]string, error) {
-	
+
 	var columns []shim.Column
 	var contractList []string
 
@@ -69,8 +67,9 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 
 	json.Unmarshal(row.Columns[1].GetBytes(), &contractList)
 	return contractList, nil
-	
+
 }
+
 /*func GetUserSpecificContractList(stub shim.ChaincodeStubInterface, UserId string) ([]string, error) {
 	var columns []shim.Column
 	var ContractList []string
