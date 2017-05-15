@@ -39,13 +39,13 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 
 }
 
-func insertContractDetails(stub shim.ChaincodeStubInterface, contId string, contractDetails contract) (bool, error) {
+func insertContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
 	var err error
 	var ok bool
 	jsonAsBytes, _ := json.Marshal(contractDetails)
 	ok, err = stub.InsertRow("contractDetails", shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: contId}},
+			&shim.Column{Value: &shim.Column_String_{String_: contractDetails.ContractId}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: jsonAsBytes}},
 		},
 	})
@@ -69,6 +69,39 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 
 	return contractList, nil
 
+}
+
+func insertAttachmentDetails(stub shim.ChaincodeStubInterface, contractID string, attachmentName string, documentBlob string) (bool, error) {
+	var err error
+	var ok bool
+
+	ok, err = stub.InsertRow("attachmentDetails", shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: contractID}},
+			&shim.Column{Value: &shim.Column_String_{String_: attachmentName}},
+			&shim.Column{Value: &shim.Column_String_{String_: documentBlob}},
+		},
+	})
+	return ok, err
+}
+
+func getAttachmentDetails(stub shim.ChaincodeStubInterface, contractId string, attachmentName string) ([]byte, error) {
+	var documentBlob string
+	var err error
+	var columns []shim.Column
+
+	col1 := shim.Column{Value: &shim.Column_String_{String_: contractId}}
+	col2 := shim.Column{Value: &shim.Column_String_{String_: attachmentName}}
+	columns = append(columns, col1)
+	columns = append(columns, col2)
+
+	row, err := stub.GetRow("ContractDetails", columns)
+	if err != nil {
+		return nil, errors.New("Failed to query table ContractDetails")
+	}
+	documentBlob = row.Columns[1].GetString_()
+	documentBlobAsBytes, _ := json.Marshal(documentBlob)
+	return documentBlobAsBytes, nil
 }
 
 /*func GetUserSpecificContractList(stub shim.ChaincodeStubInterface, UserId string) ([]string, error) {
