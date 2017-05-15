@@ -4,11 +4,10 @@ type contract struct {
 	contractId                   string `json:"contractId"`
 	sellerDetails          		 sellerDetails   `json:"sellerDetails"`
 	buyerDetails          		 buyerDetails   `json:"buyerDetails"`
-	tradeDetails				 tradeDetails   `json:"tradeDetails"`
+	tradeDetails				 []product   `json:"tradeDetails"`
 	tradeConditions				 tradeConditions `json:"tradeConditions"`
 	deliveryDetails				 deliveryDetails `json:"deliveryDetails"`	
-	contractCreateDate           string `json:"createDate"`	
-	//paymentConditionInDays       int    `json:"paymentConditionInDays"`
+	contractCreateDate           string `json:"createDate"`
 	isLCAttached                 bool   `json:"isLCAttached"`
 	isPOAttached                 bool   `json:"isPOAttached"`
 	isInvoiceListAttached        bool   `json:"isInvoiceListAttached"`
@@ -34,11 +33,6 @@ type tradeConditions struct {
 	transportDuration	string `"json:"transportDuration"`
 	currency			string `"json:"currency"`
 	paymentTerms		string `"json:"paymentTerms"`
-}
-
-type tradeDetails struct {
-	productList []product `json:"productList"`
-	poAttachment string `"json:"poAttachment"`
 }
 
 type product struct {
