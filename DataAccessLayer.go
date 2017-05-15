@@ -52,7 +52,21 @@ func insertContractDetails(stub shim.ChaincodeStubInterface, contractDetails con
 	return ok, err
 }
 
-func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
+func insertAttachmentDetails(stub shim.ChaincodeStubInterface, contractID string, attachmentName string, documentBlob string) (bool, error) {
+	var err error
+	var ok bool
+
+	ok, err = stub.InsertRow("attachmentDetails", shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: contractID}},
+			&shim.Column{Value: &shim.Column_String_{String_: attachmentName}},
+			&shim.Column{Value: &shim.Column_String_{String_: documentBlob}},
+		},
+	})
+	return ok, err
+}
+
+func getContractDetails(stub shim.ChaincodeStubInterface, contractId string) (contract, error) {
 
 	var columns []shim.Column
 	var contractList contract
@@ -71,20 +85,6 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 
 }
 
-func insertAttachmentDetails(stub shim.ChaincodeStubInterface, contractID string, attachmentName string, documentBlob string) (bool, error) {
-	var err error
-	var ok bool
-
-	ok, err = stub.InsertRow("attachmentDetails", shim.Row{
-		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: contractID}},
-			&shim.Column{Value: &shim.Column_String_{String_: attachmentName}},
-			&shim.Column{Value: &shim.Column_String_{String_: documentBlob}},
-		},
-	})
-	return ok, err
-}
-
 func getAttachmentDetails(stub shim.ChaincodeStubInterface, contractId string, attachmentName string) ([]byte, error) {
 	var documentBlob string
 	var err error
@@ -95,13 +95,48 @@ func getAttachmentDetails(stub shim.ChaincodeStubInterface, contractId string, a
 	columns = append(columns, col1)
 	columns = append(columns, col2)
 
-	row, err := stub.GetRow("ContractDetails", columns)
+	row, err := stub.GetRow("attachmentDetails", columns)
 	if err != nil {
-		return nil, errors.New("Failed to query table ContractDetails")
+		return nil, errors.New("Failed to query table contractDetails")
 	}
 	documentBlob = row.Columns[1].GetString_()
 	documentBlobAsBytes, _ := json.Marshal(documentBlob)
 	return documentBlobAsBytes, nil
+}
+
+func getUserContractList(stub shim.ChaincodeStubInterface, userId string) ([]string, bool) {
+	var columns []shim.Column
+	var contractList []string
+
+	col1 := shim.Column{Value: &shim.Column_String_{String_: userId}}
+	columns = append(columns, col1)
+
+	row, err := stub.GetRow("userDetails", columns)
+	if err != nil {
+		return nil, false
+	}
+
+	contractListAsBytes := row.Columns[1].GetBytes()
+	json.Unmarshal(contractListAsBytes, &contractList)
+
+	return contractList, true
+}
+
+func updateUserContractList(stub shim.ChaincodeStubInterface, userId string, contractList []string) bool {
+	JsonAsBytes, _ := json.Marshal(contractList)
+
+	ok, err := stub.ReplaceRow("userDetails", shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: userId}},
+			&shim.Column{Value: &shim.Column_Bytes{Bytes: JsonAsBytes}},
+		},
+	})
+
+	if !ok && err == nil {
+		return false
+	}
+
+	return true
 }
 
 /*func GetUserSpecificContractList(stub shim.ChaincodeStubInterface, UserId string) ([]string, error) {

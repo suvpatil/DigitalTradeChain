@@ -33,15 +33,20 @@ func saveContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byt
 		return nil, errors.New("Error in adding OrderDetails record")
 	}
 
-	return nil, err
+	ok, err = updateUsersContractList(stub, contractDetails)
+	if !ok {
+		return nil, err
+	}
+
+	return nil, nil
 }
 
-func getContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func getContractDetailsByContractId(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	contractId := args[0]
-	contractList, _ := getContractSpecificList(stub, contractId)
+	contractDetails, _ := getContractDetails(stub, contractId)
 
-	jsonAsBytes, _ := json.Marshal(contractList)
+	jsonAsBytes, _ := json.Marshal(contractDetails)
 	return jsonAsBytes, nil
 
 }
@@ -94,6 +99,68 @@ func addContractInformation(contractDetails contract) contract {
 	contractDetails.ContractStatus = "Contract Created"
 
 	return contractDetails
+}
+
+func updateUsersContractList(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
+	var ok bool
+	var userContractList []string
+
+	//Update Seller's Contract List
+	userContractList, ok = getUserContractList(stub, contractDetails.SellerDetails.Seller.UserId)
+	if !ok {
+		return ok, errors.New("Error in geting Seller's contract list")
+	}
+	userContractList = append(userContractList, contractDetails.ContractId)
+	ok = updateUserContractList(stub, contractDetails.SellerDetails.Seller.UserId, userContractList)
+	if !ok {
+		return ok, errors.New("Error in updating Seller's contract list")
+	}
+
+	//Update SellerBank's Contract List
+	userContractList, ok = getUserContractList(stub, contractDetails.SellerDetails.SellerBank.UserId)
+	if !ok {
+		return ok, errors.New("Error in geting SellerBank's contract list")
+	}
+	userContractList = append(userContractList, contractDetails.ContractId)
+	ok = updateUserContractList(stub, contractDetails.SellerDetails.SellerBank.UserId, userContractList)
+	if !ok {
+		return ok, errors.New("Error in updating SellerBank's contract list")
+	}
+
+	//Update Buyer's Contract List
+	userContractList, ok = getUserContractList(stub, contractDetails.BuyerDetails.Buyer.UserId)
+	if !ok {
+		return ok, errors.New("Error in geting Buyer's contract list")
+	}
+	userContractList = append(userContractList, contractDetails.ContractId)
+	ok = updateUserContractList(stub, contractDetails.BuyerDetails.Buyer.UserId, userContractList)
+	if !ok {
+		return ok, errors.New("Error in updating Buyer's contract list")
+	}
+
+	//Update BuyerBank's Contract List
+	userContractList, ok = getUserContractList(stub, contractDetails.BuyerDetails.BuyerBank.UserId)
+	if !ok {
+		return ok, errors.New("Error in geting BuyerBank's contract list")
+	}
+	userContractList = append(userContractList, contractDetails.ContractId)
+	ok = updateUserContractList(stub, contractDetails.BuyerDetails.BuyerBank.UserId, userContractList)
+	if !ok {
+		return ok, errors.New("Error in updating BuyerBank's contract list")
+	}
+
+	//Update Transporter's Contract List
+	userContractList, ok = getUserContractList(stub, contractDetails.DeliveryDetails.TransporterDetails.UserId)
+	if !ok {
+		return ok, errors.New("Error in geting Transporter's contract list")
+	}
+	userContractList = append(userContractList, contractDetails.ContractId)
+	ok = updateUserContractList(stub, contractDetails.DeliveryDetails.TransporterDetails.UserId, userContractList)
+	if !ok {
+		return ok, errors.New("Error in updating Transporter's contract list")
+	}
+
+	return true, nil
 }
 
 /*func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

@@ -41,9 +41,9 @@ func (t *DTC_Chaincode) Invoke(stub shim.ChaincodeStubInterface, function string
 
 func (t *DTC_Chaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
-	if function == "getContractDetails" {
+	if function == "getContractDetailsByContractId" {
 		// Read contract details from blockchain
-		return getContractDetails(stub, args)
+		return getContractDetailsByContractId(stub, args)
 	} else if function == "GetAttachment" {
 		// get attachment details from blockchain
 		return GetAttachment(stub, args)
