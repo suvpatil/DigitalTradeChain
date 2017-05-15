@@ -11,8 +11,8 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 	var err error
 	//Create table "ContractDetails"
 	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
-		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "contractList", Type: shim.ColumnDefinition_BYTES, Key: false},
+		&shim.ColumnDefinition{Name: "ContractId", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "ContractObject", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
 		return errors.New("Failed creating ContractDetails table")
@@ -64,8 +64,8 @@ func getContractSpecificList(stub shim.ChaincodeStubInterface, contractId string
 	if err != nil {
 		return contractList, errors.New("Failed to query table contractDetails")
 	}
-
-	json.Unmarshal(row.Columns[1].GetBytes(), &contractList)
+	contractAsBytes := row.Columns[1].GetBytes()
+	json.Unmarshal(contractAsBytes, &contractList)
 
 	return contractList, nil
 
