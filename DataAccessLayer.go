@@ -185,6 +185,19 @@ func insertUserContractList(stub shim.ChaincodeStubInterface, userId string, con
 	return true
 }
 
+func getUserSpecificContractDetails(stub shim.ChaincodeStubInterface, userId string) ([]contract, error) {
+	var columns []shim.Column
+	var contractDetails contract
+	var contract []contract
+	contractIdList:=getUserContractList(stub,userId)
+	for_,element :=range contractIdList{
+		contractId:=element
+		contractDetails,_=getContractDetails(stub,contractId)
+		contract=append(contract,contractDetails)
+	}
+	contractAsBytes, _ := json.Marshal(contract)
+	return contractAsBytes, nil
+}
 /*func GetUserSpecificContractList(stub shim.ChaincodeStubInterface, UserId string) ([]string, error) {
 	var columns []shim.Column
 	var ContractList []string

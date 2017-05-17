@@ -173,6 +173,19 @@ func updateUsersContractList(stub shim.ChaincodeStubInterface, contractDetails c
 	return true, nil
 }
 
+func GetUserSpecificContractDetails(stub shim.ChaincodeStubInterface, userId string)([]contract, error){
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Need 1 argument")
+	}
+
+	jsonAsBytes, err := getUserSpecificContractDetails(stub, userId)
+	if err != nil {
+		return nil, errors.New("Error in getting the details")
+	}
+
+	return jsonAsBytes, nil
+
+}
 /*func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 }*/
