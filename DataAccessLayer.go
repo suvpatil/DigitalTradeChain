@@ -21,7 +21,7 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) (bool,error
 	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "contractId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "attachmentName", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "documentBlob", Type: shim.ColumnDefinition_BYTES, Key: false},
+		&shim.ColumnDefinition{Name: "documentBlob", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
 		return false, errors.New("Failed creating attachmentDetails table.")
@@ -129,7 +129,7 @@ func getAttachmentDetails(stub shim.ChaincodeStubInterface, contractId string, a
 	if err != nil {
 		return nil, errors.New("Failed to query table contractDetails")
 	}
-	documentBlob = row.Columns[1].GetString_()
+	documentBlob = row.Columns[2].GetString_()
 	documentBlobAsBytes, _ := json.Marshal(documentBlob)
 	return documentBlobAsBytes, nil
 }
