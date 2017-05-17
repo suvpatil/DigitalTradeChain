@@ -81,7 +81,7 @@ func saveAttachmentDetails(stub shim.ChaincodeStubInterface, args []string) ([]b
 	return nil, err
 }
 
-func GetAttachment(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func getAttachment(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Need 2 arguments")
 	}
@@ -173,17 +173,27 @@ func updateUsersContractList(stub shim.ChaincodeStubInterface, contractDetails c
 	return true, nil
 }
 
-func GetUserSpecificContractDetails(stub shim.ChaincodeStubInterface, userId string)([]contract, error){
+func getContractDetailsByUserId(stub shim.ChaincodeStubInterface, args []string)([]byte, error){
+	var contractDetails []contract
+	var contract contract
+
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Need 1 argument")
 	}
+	userId := args[0]
 
-	jsonAsBytes, err := getUserSpecificContractDetails(stub, userId)
-	if err != nil {
-		return nil, errors.New("Error in getting the details")
+	contractIdList, ok := getUserContractList(stub,userId)
+	if !ok {
+		return nil, errors.New("Error in geting user specific contract list")
 	}
 
-	return jsonAsBytes, nil
+	for _,element :=range contractIdList {
+		contractId:=element
+		contract, _ = getContractDetails(stub,contractId)
+		contractDetails=append(contractDetails,contract)
+	}
+	contractAsBytes, _ := json.Marshal(contract)
+	return contractAsBytes, nil
 
 }
 /*func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

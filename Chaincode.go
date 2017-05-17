@@ -44,12 +44,12 @@ func (t *DTC_Chaincode) Query(stub shim.ChaincodeStubInterface, function string,
 	if function == "getContractDetailsByContractId" {
 		// Read contract details from blockchain
 		return getContractDetailsByContractId(stub, args)
-	} else if function == "GetAttachment" {
+	} else if function == "getAttachment" {
 		// get attachment details from blockchain
-		return GetAttachment(stub, args)
-	}else if function == "GetUserSpecificContractDetails" {
+		return getAttachment(stub, args)
+	}else if function == "getContractDetailsByUserId" {
 		// get attachment details from blockchain
-		return GetUserSpecificContractDetails(stub, args)
+		return getContractDetailsByUserId(stub, args)
 	}
 
 	return nil, nil
