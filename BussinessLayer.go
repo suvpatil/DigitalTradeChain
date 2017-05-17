@@ -12,7 +12,17 @@ import (
 )
 
 func initializeChaincode(stub shim.ChaincodeStubInterface, args []string) error {
-	return createDatabase(stub, args)
+	var ok bool
+	var err error
+	ok, err = createDatabase(stub, args)
+	if !ok {
+		return err
+		}
+	ok, err = initializeUsers(stub)
+		if !ok {
+			return err
+		}
+		return nil
 }
 
 func saveContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

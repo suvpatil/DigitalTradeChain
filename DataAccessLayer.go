@@ -7,7 +7,7 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
+func createDatabase(stub shim.ChaincodeStubInterface, args []string) (bool,error) {
 	var err error
 	//Create table "ContractDetails"
 	err = stub.CreateTable("contractDetails", []*shim.ColumnDefinition{
@@ -15,7 +15,7 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 		&shim.ColumnDefinition{Name: "ContractObject", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
-		return errors.New("Failed creating ContractDetails table")
+		return false, errors.New("Failed creating ContractDetails table")
 	}
 
 	err = stub.CreateTable("attachmentDetails", []*shim.ColumnDefinition{
@@ -24,7 +24,7 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 		&shim.ColumnDefinition{Name: "documentBlob", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
-		return errors.New("Failed creating attachmentDetails table.")
+		return false, errors.New("Failed creating attachmentDetails table.")
 	}
 
 	err = stub.CreateTable("userDetails", []*shim.ColumnDefinition{
@@ -32,12 +32,42 @@ func createDatabase(stub shim.ChaincodeStubInterface, args []string) error {
 		&shim.ColumnDefinition{Name: "contractIdList", Type: shim.ColumnDefinition_BYTES, Key: false},
 	})
 	if err != nil {
-		return errors.New("Failed creating userDetails table.")
+		return false, errors.New("Failed creating userDetails table.")
 	}
 
-	return nil
+	return true,nil
 
 }
+
+func initializeUsers (stub shim.ChaincodeStubInterface) (bool, error) {
+		var blankList []string
+		var ok bool
+
+		ok = insertUserContractList(stub,"Seller1",blankList)
+		if !ok {
+			return ok, errors.New("Error in creating Seller1")
+		}
+		ok = insertUserContractList(stub,"Buyer1",blankList)
+		if !ok {
+			return ok, errors.New("Error in creating Buyer1")
+		}
+		ok = insertUserContractList(stub,"SellerBank1",blankList)
+		if !ok {
+			return ok, errors.New("Error in creating SellerBank1")
+		}
+		ok = insertUserContractList(stub,"BuyerBank1",blankList)
+		if !ok {
+			return ok, errors.New("Error in creating BuyerBank1")
+		}
+		ok = insertUserContractList(stub,"Transporter1",blankList)
+		if !ok {
+			return ok, errors.New("Error in creating Transporter1")
+		}
+
+		return true, nil
+
+}
+
 
 func insertContractDetails(stub shim.ChaincodeStubInterface, contractDetails contract) (bool, error) {
 	var err error
@@ -136,6 +166,22 @@ func updateUserContractList(stub shim.ChaincodeStubInterface, userId string, con
 		return false
 	}
 
+	return true
+}
+
+func insertUserContractList(stub shim.ChaincodeStubInterface, userId string, contractList []string) bool {
+	JsonAsBytes, _ := json.Marshal(contractList)
+
+	ok, err := stub.InsertRow("userDetails", shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: userId}},
+			&shim.Column{Value: &shim.Column_Bytes{Bytes: JsonAsBytes}},
+		},
+	})
+
+	if !ok && err == nil {
+		return false
+	}
 	return true
 }
 
