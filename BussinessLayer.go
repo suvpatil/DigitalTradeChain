@@ -192,7 +192,7 @@ func getContractDetailsByUserId(stub shim.ChaincodeStubInterface, args []string)
 		contract, _ = getContractDetails(stub,contractId)
 		contractDetails=append(contractDetails,contract)
 	}
-	contractAsBytes, _ := json.Marshal(contract)
+	contractAsBytes, _ := json.Marshal(contractDetails)
 	return contractAsBytes, nil
 
 }
