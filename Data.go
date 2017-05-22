@@ -1,30 +1,30 @@
 package main
 
 type contract struct {
-	ContractId                   string          `json:"contractId"`
-	SellerDetails                sellerDetails   `json:"sellerDetails"`
-	BuyerDetails                 buyerDetails    `json:"buyerDetails"`
-	TradeDetails                 []product       `json:"tradeDetails"`
-	TradeConditions              tradeConditions `json:"tradeConditions"`
-	DeliveryDetails              deliveryDetails `json:"deliveryDetails"`
-	ContractCreateDate           string          `json:"createDate"`
-	IsLCAttached                 bool            `json:"isLCAttached"`
-	IsPOAttached                 bool            `json:"isPOAttached"`
-	IsInvoiceListAttached        bool            `json:"isInvoiceListAttached"`
-	IsBillOfLedingAttached       bool            `json:"isBillOfLedingAttached"`
-	ActionPendingOn              string          `json:"actionPendingOn"`
-	ContractStatus               string          `json:"contractStatus"`
-	LastUpdatedDate              string          `json:"createDate"`
-	BuyerApprove                 string          `json:"buyerApprove"`
-	LocPublishedByBuyerBank      string          `json:"locPublishedByBuyerBank"`
-	LocPublishedBySellerBank     string          `json:"locPublishedBySellerBank"`
-	ReadyForShipmentDateBySeller string          `json:"readyForShipmentDateBySeller"`
-	DeliveryOngoingByTransporter string          `json:"deliveryOngoingByTransporter"`
-	ShipmentDoneByTransporter    string          `json:"shipmentDoneByTransporter"`
-	DeliveryConfirmByBuyer       string          `json:"deliveryConfirmByBuyer"`
-	PaymentInitiatedByBuyerBank  string          `json:"paymentInitiatedByBuyerBank"`
-	PaymentSetteledBySellerBank  string          `json:"paymentSetteledBySellerBank"`
-	PaymentConfirmedBySeller     string          `json:"paymentConfirmedBySeller"`
+	ContractId                                  string          `json:"contractId"`
+	SellerDetails                               sellerDetails   `json:"sellerDetails"`
+	BuyerDetails                                buyerDetails    `json:"buyerDetails"`
+	TradeDetails                                []product       `json:"tradeDetails"`
+	TradeConditions                             tradeConditions `json:"tradeConditions"`
+	DeliveryDetails                             deliveryDetails `json:"deliveryDetails"`
+	ContractCreateDate                          string          `json:"createDate"`
+	IsLCAttached                                bool            `json:"isLCAttached"`
+	IsPOAttached                                bool            `json:"isPOAttached"`
+	IsInvoiceListAttached                       bool            `json:"isInvoiceListAttached"`
+	IsBillOfLedingAttached                      bool            `json:"isBillOfLedingAttached"`
+	ActionPendingOn                             string          `json:"actionPendingOn"`
+	ContractStatus                              string          `json:"contractStatus"`
+	LastUpdatedDate                             string          `json:"LastUpdatedDate"`
+	ApprovedContractByBuyerDate                 string          `json:"ApprovedContractByBuyerDate"`
+	LCCreatedByBuyerBankDate                    string          `json:"LCCreatedByBuyerBankDate"`
+	LCApprovedBySellerBankDate                  string          `json:"LCApprovedBySellerBankDate"`
+	ReadyForShipmentBySellerDate                string          `json:"ReadyForShipmentBySellerDate"`
+	ShipmentInProgressByTransDate               string          `json:"ShipmentInProgressByTransDate"`
+	ShipmentDeliveredByBuyerDate                string          `json:"ShipmentDeliveredByBuyerDate"`
+	InvoiceCreatedBySellerDate                  string          `json:"InvoiceCreatedBySellerDate"`
+	PaymentCompletedToSellerBySellerBankDate    string          `json:"PaymentCompletedToSellerBySellerBankDate"`
+	PaymentCompletedToSellerBankByBuyerBankDate string          `json:"PaymentCompletedToSellerBankByBuyerBankDate"`
+	ContractCompletedByBuyerDate                string          `json:"ContractCompletedByBuyerDate"`
 }
 
 type tradeConditions struct {
@@ -51,8 +51,8 @@ type buyerDetails struct {
 }
 
 type deliveryDetails struct {
-	PickupAddress            string `json:"pickupAddress"`
-	DeliveryAddress            string `json:"deliveryAddress"`
+	PickupAddress      string `json:"pickupAddress"`
+	DeliveryAddress    string `json:"deliveryAddress"`
 	DeliveryDate       string `json:"deliveryDate"`
 	TransporterDetails user   `json:"transporterDetails"`
 }
