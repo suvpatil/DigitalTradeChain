@@ -215,7 +215,7 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 	if contractList.SellerDetails.Seller.UserId == userID {
 		if contractStatus == "LC Approved" {
 			contractList.ContractStatus = "Ready For Shipment"
-			contractList.ActionPendingOn = "Tronsporter"
+			contractList.ActionPendingOn = "Transporter"
 		} else if contractStatus == "Shipment Delivered" {
 			contractList.ContractStatus = "Invoice Created"
 			contractList.ActionPendingOn = "Seller Bank"
@@ -257,7 +257,7 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for transporter
 	if contractList.DeliveryDetails.TransporterDetails.UserId == userID {
-		if contractStatus == "Ready for Shipment" {
+		if contractStatus == "Ready For Shipment" {
 			contractList.ContractStatus = "Shipment Inprogress"
 			contractList.ActionPendingOn = "Buyer"
 		} else if contractStatus == "Shipment Inprogress" {
