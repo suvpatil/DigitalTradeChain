@@ -17,12 +17,12 @@ func initializeChaincode(stub shim.ChaincodeStubInterface, args []string) error 
 	ok, err = createDatabase(stub, args)
 	if !ok {
 		return err
-		}
+	}
 	ok, err = initializeUsers(stub)
-		if !ok {
-			return err
-		}
-		return nil
+	if !ok {
+		return err
+	}
+	return nil
 }
 
 func saveContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
@@ -173,7 +173,7 @@ func updateUsersContractList(stub shim.ChaincodeStubInterface, contractDetails c
 	return true, nil
 }
 
-func getContractDetailsByUserId(stub shim.ChaincodeStubInterface, args []string)([]byte, error){
+func getContractDetailsByUserId(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var contractDetails []contract
 	var contract contract
 
@@ -182,20 +182,95 @@ func getContractDetailsByUserId(stub shim.ChaincodeStubInterface, args []string)
 	}
 	userId := args[0]
 
-	contractIdList, ok := getUserContractList(stub,userId)
+	contractIdList, ok := getUserContractList(stub, userId)
 	if !ok {
 		return nil, errors.New("Error in geting user specific contract list")
 	}
 
-	for _,element :=range contractIdList {
-		contractId:=element
-		contract, _ = getContractDetails(stub,contractId)
-		contractDetails=append(contractDetails,contract)
+	for _, element := range contractIdList {
+		contractId := element
+		contract, _ = getContractDetails(stub, contractId)
+		contractDetails = append(contractDetails, contract)
 	}
 	contractAsBytes, _ := json.Marshal(contractDetails)
 	return contractAsBytes, nil
 
 }
-/*func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	var ok bool
+	var err error
+	//var status statusMaintained
+	//var contractLists contract
 
-}*/
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Need 3 arguments")
+	}
+
+	userID := args[0]
+	contractID := args[1]
+	contractList, _ := getContractDetails(stub, contractID)
+
+	contractStatus := contractList.ContractStatus
+	//for seller
+	if contractList.SellerDetails.Seller.UserId == userID {
+		if contractStatus == "LC Approved" {
+			contractList.ContractStatus = "Ready For Shipment"
+			contractList.ActionPendingOn = "Tronsporter"
+		} else if contractStatus == "Shipment Delivered" {
+			contractList.ContractStatus = "Invoice Created"
+			contractList.ActionPendingOn = "Seller Bank"
+		}
+	}
+
+	//for buyer
+	if contractList.BuyerDetails.Buyer.UserId == userID {
+		if contractStatus == "Created" {
+			contractList.ContractStatus = "Accepted"
+			contractList.ActionPendingOn = "Buyer Bank"
+		} else if contractStatus == "Payment Completed to Seller Bank" {
+			contractList.ContractStatus = "Completed"
+			contractList.ActionPendingOn = "Completed"
+		}
+	}
+
+	//for sellerBank
+	if contractList.SellerDetails.SellerBank.UserId == userID {
+		if contractStatus == "LC Created" {
+			contractList.ContractStatus = "LC Approved"
+			contractList.ActionPendingOn = "Seller"
+		} else if contractStatus == "Invoice Created" {
+			contractList.ContractStatus = "Payment Completed to Seller"
+			contractList.ActionPendingOn = "Buyer Bank"
+		}
+	}
+
+	//for buyerBank
+	if contractList.BuyerDetails.BuyerBank.UserId == userID {
+		if contractStatus == "Accepted" {
+			contractList.ContractStatus = "LC Created"
+			contractList.ActionPendingOn = "Seller Bank"
+		} else if contractStatus == "Payment Completed to Seller" {
+			contractList.ContractStatus = "Payment Completed to Seller Bank"
+			contractList.ActionPendingOn = "Buyer"
+		}
+	}
+
+	//for transporter
+	if contractList.DeliveryDetails.TransporterDetails.UserId == userID {
+		if contractStatus == "Ready for Shipment" {
+			contractList.ContractStatus = "Shipment Inprogress"
+			contractList.ActionPendingOn = "Buyer"
+		} else if contractStatus == "Shipment Inprogress" {
+			contractList.ContractStatus = "Shipment Delivered"
+		}
+	}
+
+	//status = setStructStatus(stub, status, userID, contractStatus)
+	ok = updateContractListByContractID(stub, contractID, contractList)
+	if !ok {
+		return nil, errors.New("Error in updating contract list")
+	}
+
+	return nil, err
+
+}
