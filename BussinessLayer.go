@@ -277,6 +277,7 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 		}
 	}
 
+	contractList.LastUpdatedDate = current_time.Format("2006-01-02")
 	//status = setStructStatus(stub, status, userID, contractStatus)
 	ok = updateContractListByContractID(stub, contractID, contractList)
 	if !ok {
