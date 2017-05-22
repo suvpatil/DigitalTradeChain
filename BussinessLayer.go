@@ -106,7 +106,7 @@ func addContractInformation(contractDetails contract) contract {
 	contractDetails.IsBillOfLedingAttached = false
 	contractDetails.IsInvoiceListAttached = false
 	contractDetails.ActionPendingOn = "Buyer"
-	contractDetails.ContractStatus = "Created"
+	contractDetails.ContractStatus = "Contract Created"
 
 	return contractDetails
 }
@@ -224,12 +224,15 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for buyer
 	if contractList.BuyerDetails.Buyer.UserId == userID {
-		if contractStatus == "Created" {
+		if contractStatus == "Contract Created" {
 			contractList.ContractStatus = "Accepted"
 			contractList.ActionPendingOn = "Buyer Bank"
 		} else if contractStatus == "Payment Completed to Seller Bank" {
-			contractList.ContractStatus = "Completed"
-			contractList.ActionPendingOn = "Completed"
+			contractList.ContractStatus = "Contract Completed"
+			contractList.ActionPendingOn = "Contract Completed"
+		} else if contractStatus == "Shipment Inprogress" {
+			contractList.ContractStatus = "Shipment Delivered"
+			contractList.ActionPendingOn = "Seller"
 		}
 	}
 
@@ -260,8 +263,6 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 		if contractStatus == "Ready For Shipment" {
 			contractList.ContractStatus = "Shipment Inprogress"
 			contractList.ActionPendingOn = "Buyer"
-		} else if contractStatus == "Shipment Inprogress" {
-			contractList.ContractStatus = "Shipment Delivered"
 		}
 	}
 
