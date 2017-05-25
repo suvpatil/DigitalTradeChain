@@ -214,12 +214,12 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 	contractStatus := contractList.ContractStatus
 	//for seller
 	if contractList.SellerDetails.Seller.UserId == userID {
-		if contractStatus == "LC Approved" {
-			contractList.ContractStatus = "Ready For Shipment"
+		if contractStatus == LC_Approved {
+			contractList.ContractStatus = Ready_For_Shipment
 			contractList.ActionPendingOn = "Transporter"
 			contractList.ReadyForShipmentBySellerDate = current_time.Format("2006-01-02")
-		} else if contractStatus == "Shipment Delivered" {
-			contractList.ContractStatus = "Invoice Created"
+		} else if contractStatus == Shipment_Delivered {
+			contractList.ContractStatus = Invoice_Created
 			contractList.ActionPendingOn = "Seller Bank"
 			contractList.InvoiceCreatedBySellerDate = current_time.Format("2006-01-02")
 		}
@@ -227,16 +227,16 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for buyer
 	if contractList.BuyerDetails.Buyer.UserId == userID {
-		if contractStatus == "Contract Created" {
-			contractList.ContractStatus = "Contract Accepted"
+		if contractStatus == Contract_Created {
+			contractList.ContractStatus = Contract_Accepted
 			contractList.ActionPendingOn = "Buyer Bank"
 			contractList.ApprovedContractByBuyerDate = current_time.Format("2006-01-02")
-		} else if contractStatus == "Payment Completed to Seller Bank" {
-			contractList.ContractStatus = "Contract Completed"
-			contractList.ActionPendingOn = "Contract Completed"
+		} else if contractStatus == Payment_Completed_to_Seller_Bank {
+			contractList.ContractStatus = Contract_Completed
+			contractList.ActionPendingOn = Contract_Completed
 			contractList.ContractCompletedByBuyerDate = current_time.Format("2006-01-02")
-		} else if contractStatus == "Shipment Inprogress" {
-			contractList.ContractStatus = "Shipment Delivered"
+		} else if contractStatus == Shipment_Inprogress {
+			contractList.ContractStatus = Shipment_Delivered
 			contractList.ActionPendingOn = "Seller"
 			contractList.ShipmentDeliveredByBuyerDate = current_time.Format("2006-01-02")
 		}
@@ -244,12 +244,12 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for sellerBank
 	if contractList.SellerDetails.SellerBank.UserId == userID {
-		if contractStatus == "LC Created" {
-			contractList.ContractStatus = "LC Approved"
+		if contractStatus == LC_Created {
+			contractList.ContractStatus = LC_Approved
 			contractList.ActionPendingOn = "Seller"
 			contractList.LCApprovedBySellerBankDate = current_time.Format("2006-01-02")
-		} else if contractStatus == "Invoice Created" {
-			contractList.ContractStatus = "Payment Completed to Seller"
+		} else if contractStatus == Invoice_Created {
+			contractList.ContractStatus = Payment_Completed_to_Seller
 			contractList.ActionPendingOn = "Buyer Bank"
 			contractList.PaymentCompletedToSellerBySellerBankDate = current_time.Format("2006-01-02")
 		}
@@ -257,12 +257,12 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for buyerBank
 	if contractList.BuyerDetails.BuyerBank.UserId == userID {
-		if contractStatus == "Contract Accepted" {
-			contractList.ContractStatus = "LC Created"
+		if contractStatus == Contract_Accepted {
+			contractList.ContractStatus = LC_Created
 			contractList.ActionPendingOn = "Seller Bank"
 			contractList.LCCreatedByBuyerBankDate = current_time.Format("2006-01-02")
-		} else if contractStatus == "Payment Completed to Seller" {
-			contractList.ContractStatus = "Payment Completed to Seller Bank"
+		} else if contractStatus == Payment_Completed_to_Seller {
+			contractList.ContractStatus = Payment_Completed_to_Seller_Bank
 			contractList.ActionPendingOn = "Buyer"
 			contractList.PaymentCompletedToSellerBankByBuyerBankDate = current_time.Format("2006-01-02")
 		}
@@ -270,8 +270,8 @@ func UpdateContractStatus(stub shim.ChaincodeStubInterface, args []string) ([]by
 
 	//for transporter
 	if contractList.DeliveryDetails.TransporterDetails.UserId == userID {
-		if contractStatus == "Ready For Shipment" {
-			contractList.ContractStatus = "Shipment Inprogress"
+		if contractStatus == Ready_For_Shipment {
+			contractList.ContractStatus = Shipment_Inprogress
 			contractList.ActionPendingOn = "Buyer"
 			contractList.ShipmentInProgressByTransDate = current_time.Format("2006-01-02")
 		}
