@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 
-	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -98,7 +96,8 @@ func getAttachment(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 }
 
 func addContractInformation(contractDetails contract) contract {
-	contractDetails.ContractId = strconv.Itoa(rand.Int() + 1)
+	//contractDetails.ContractId = strconv.Itoa(rand.Int() + 1)
+	contractDetails.ContractId = time.Now().Format("150405")
 	current_time := time.Now().Local()
 	contractDetails.ContractCreateDate = current_time.Format("2006-01-02")
 	contractDetails.IsLCAttached = false
