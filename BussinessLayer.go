@@ -105,7 +105,7 @@ func addContractInformation(contractDetails contract) contract {
 	contractDetails.IsBillOfLedingAttached = false
 	contractDetails.IsInvoiceListAttached = false
 	contractDetails.ActionPendingOn = "Buyer"
-	contractDetails.ContractStatus = "Contract Created"
+	contractDetails.ContractStatus = Contract_Created
 
 	return contractDetails
 }
